@@ -1,3 +1,5 @@
+# src/main/resources/application.yml
+
 normalizer:
   titles:
     - Architect
@@ -6,6 +8,26 @@ normalizer:
     - Accountant
     - Builder
   threshold: 0.5
+
+app:
+  api:
+    # Defaults to localhost for dev, overridable via APP_API_BASE_URL env var in GCP
+    base-url: ${APP_API_BASE_URL:http://localhost:8080}
+
+springdoc:
+  api-docs:
+    # Where the raw OpenAPI JSON is served
+    path: /v3/api-docs
+
+  swagger-ui:
+    # Where the Swagger-UI HTML is served
+    path: /swagger-ui.html
+
+    # The OpenAPI JSON endpoint the UI will fetch
+    url: /v3/api-docs
+
+    # The UI’s own config JSON (optional, but ensures full wiring)
+    config-url: /v3/api-docs/swagger-config
 
 management:
   endpoints:
