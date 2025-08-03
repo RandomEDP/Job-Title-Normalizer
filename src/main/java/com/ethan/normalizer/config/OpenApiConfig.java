@@ -1,22 +1,22 @@
 package com.ethan.normalizer.config;
 
-import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
+    @Value("${app.api.base-url:}")
+    private String baseUrl;
+
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Job Title Normalizer API")
-                        .version("1.0")
-                        .description("Normalize job titles via REST"))
-                .externalDocs(new ExternalDocumentation()
-                        .description("Project Repo")
-                        .url("https://github.com/your/repo"));
+        OpenAPI api = new OpenAPI();
+        if (!baseUrl.isBlank()) {
+            api.addServersItem(new Server().url(baseUrl));
+        }
+        return api;
     }
 }

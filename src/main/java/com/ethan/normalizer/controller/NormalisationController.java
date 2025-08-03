@@ -17,7 +17,7 @@ public class NormalisationController {
         this.normaliser = normaliser;
     }
 
-    @GetMapping("/normalize")
+    @GetMapping
     @Operation(
             summary = "Normalize a job title",
             description = "Returns the best match for a given raw job title"
