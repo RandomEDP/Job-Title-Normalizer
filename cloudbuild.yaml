@@ -1,0 +1,20 @@
+steps:
+  # 1) Build your jar with Maven
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: ['clean', 'package', '-DskipTests']
+
+  # 2) Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'gcr.io/$PROJECT_ID/job-title-normalizer',
+        '.'
+      ]
+
+# Push the image up to Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/job-title-normalizer'
+
+timeout: '1200s'
