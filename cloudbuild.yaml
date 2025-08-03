@@ -17,4 +17,8 @@ steps:
 images:
   - 'gcr.io/$PROJECT_ID/job-title-normalizer'
 
+# Use Cloud Logging only (valid when using a custom service account)
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 timeout: '1200s'
