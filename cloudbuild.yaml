@@ -1,5 +1,5 @@
 steps:
-  # 1) Build your Spring Boot jar
+  # 1) Build Spring Boot jar
   - name: 'gcr.io/cloud-builders/mvn'
     args:
       - 'clean'
@@ -20,7 +20,7 @@ steps:
       - 'push'
       - 'gcr.io/$PROJECT_ID/job-title-normalizer:$SHORT_SHA'
 
-  # 4) Deploy to Cloud Run (now the image is already there)
+  # 4) Deploy to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
@@ -34,8 +34,8 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
 
-# Remove the `images:` section (we’re pushing explicitly)
-# Use Cloud Logging only (needed if you use a custom service account)
+# Remove the `images:` section
+# Use Cloud Logging only
 options:
   logging: CLOUD_LOGGING_ONLY
 
