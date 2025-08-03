@@ -1,37 +1,60 @@
-# Job Title Normalizer Spring Boot Service
+# Job Title Normalizer
 
-## Overview
-A production-ready Spring Boot microservice to normalize job titles against a configurable set of ideal titles using a token-based matching strategy.
+A Spring Boot service that normalizes arbitrary job‐title strings to one of a pre‐configured list of canonical titles.
 
-## Features
-- **Configuration**: Externalized in `application.yml` (titles list & similarity threshold)  
-- **Dependency Injection**: Fully uses Spring's IoC for services and components  
-- **Validation**: Method-level and request parameter validation with global exception handling  
-- **Observability**: Spring Boot Actuator endpoints, Micrometer metrics, structured SLF4J logging  
-- **REST API**: `GET /api/normalize?title=...` returns JSON `{ "normalizedTitle": "..." }`  
-- **API Documentation**: Interactive Swagger UI for exploring and testing  
-- **Tests**: Comprehensive unit, parameterized, edge-case, and integration tests  
+## 🚀 Live Swagger UI
 
-## Getting Started
+Browse and “Try it out” here:  
+https://job-title-normalizer-1083685539637.europe-west1.run.app/swagger-ui/index.html
 
-### Prerequisites
-- Java 17+  
-- Maven 3.8+  
+## 🔧 Project Structure
 
-### Build & Run
-```bash
-mvn clean package
-mvn spring-boot:run
+```
+job-title-normalizer-spring-prod2/
+├── .dockerignore
+├── .gitignore
+├── app.yaml
+├── cloudbuild.yaml
+├── Dockerfile
+├── pom.xml
+├── README.md
+└── src/
+    ├── main/
+    │   ├── java/com/ethan/normalizer/
+    │   │   ├── JobTitleNormalizerApplication.java
+    │   │   ├── MatchResult.java
+    │   │   ├── TitleMatcher.java
+    │   │   ├── config/
+    │   │   │   ├── NormalizerProperties.java
+    │   │   │   ├── OpenApiConfig.java
+    │   │   │   └── WebConfig.java
+    │   │   ├── controller/
+    │   │   │   ├── NormalisationController.java
+    │   │   │   └── NormalisationResponse.java
+    │   │   ├── exception/
+    │   │   │   └── GlobalExceptionHandler.java
+    │   │   └── service/
+    │   │       ├── NormalisationService.java
+    │   │       ├── JobTitleNormaliserService.java
+    │   │       └── SimpleTokenMatcher.java
+    │   └── resources/
+    │       └── application.yml
+    └── test/
+        └── java/com/ethan/normalizer/
+            ├── controller/
+            │   ├── ControllerExtraTest.java
+            │   └── NormalisationControllerTest.java
+            ├── matchResult/
+            │   └── MatchResultTest.java
+            └── service/
+                ├── JobTitleNormaliserServiceTest.java
+                ├── MatcherThresholdTest.java
+                ├── ServiceExtraEdgeCasesTest.java
+                └── SimpleTokenMatcherTest.java
 ```
 
-### Usage
-```bash
-curl "http://localhost:8080/api/normalize?title=Chief%20Accountant"
-# Response: {"normalizedTitle":"Accountant"}
-```
+## ⚙️ Configuration (`application.yml`)
 
-### Configuration
-Edit `src/main/resources/application.yml`:
 ```yaml
 normalizer:
   titles:
@@ -39,63 +62,45 @@ normalizer:
     - Software engineer
     - Quantity surveyor
     - Accountant
+    - Builder
   threshold: 0.5
+
+app:
+  api:
+    base-url: ${APP_API_BASE_URL:}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    url:  /v3/api-docs
+    config-url: /v3/api-docs/swagger-config
 
 management:
   endpoints:
     web:
-      exposure:
-        include: health,info,metrics
+      exposure: [health,info,metrics]
 ```
 
-## Actuator Endpoints
-- `GET /actuator/health`  
-- `GET /actuator/metrics`  
-- `GET /actuator/info`  
+> **Tip:** To extend or refine matching, you can **add or remove** entries in the `normalizer.titles` list and **tune** the `normalizer.threshold` value in this file before starting the app.
 
-## API Documentation
-Once running, you can explore and test the REST API via Swagger UI:
+## 📦 Build & Run Locally
 
-- **Swagger UI**:  
-  http://localhost:8080/swagger-ui.html  
-  (or http://localhost:8080/swagger-ui/index.html)
+1. Update titles & threshold in `application.yml` if needed.  
+2. Run the application directly with Maven:
+   ```bash
+   mvn spring-boot:run
+   ```
+3. Open Swagger UI at `http://localhost:8080/swagger-ui.html`.
 
-- **OpenAPI JSON**:  
-  http://localhost:8080/v3/api-docs
+## ☁️ CI/CD & Deployment
 
-## Project Structure
-```
-job-title-normalizer-spring-prod/
-├── README.md
-├── pom.xml
-├── src/
-│   ├── main/
-│   │   ├── java/com/ethan/normalizer/
-│   │   │   ├── JobTitleNormalizerApplication.java
-│   │   │   ├── config/NormalizerProperties.java
-│   │   │   ├── config/OpenApiConfig.java
-│   │   │   ├── service/
-│   │   │   │   ├── NormalisationService.java
-│   │   │   │   ├── SimpleTokenMatcher.java
-│   │   │   │   └── JobTitleNormaliserService.java
-│   │   │   ├── controller/
-│   │   │   │   ├── NormalisationController.java
-│   │   │   │   └── NormalisationResponse.java
-│   │   │   └── exception/GlobalExceptionHandler.java
-│   │   └── resources/
-│   │       └── application.yml
-│   └── test/
-│       └── java/com/ethan/normalizer/
-│           ├── MatchResultTest.java
-│           ├── service/
-│           │   ├── JobTitleNormaliserServiceTest.java
-│           │   ├── SimpleTokenMatcherTest.java
-│           │   ├── MatcherThresholdTest.java
-│           │   └── ServiceExtraEdgeCasesTest.java
-│           └── controller/
-│               ├── NormalisationControllerTest.java
-│               └── ControllerExtraTest.java
-```
+- **cloudbuild.yaml**: automates build, Docker push, and deploy to Cloud Run.  
+- **Cloud Run service:** `job-title-normalizer` in `europe-west1`.  
+- **Environment variables** in Cloud Run:
+  - `APP_API_BASE_URL=https://job-title-normalizer-1083685539637.europe-west1.run.app`
 
-## License
-MIT License
+---
+
+_Thanks for using the Job Title Normalizer!_
