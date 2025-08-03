@@ -1,11 +1,45 @@
-# Job Title Normalizer
+# Job Title Normalizer Spring Boot Service
 
-A Spring Boot service that normalizes arbitrary job‐title strings to one of a pre‐configured list of canonical titles.
+## Overview
+A production-ready Spring Boot microservice to normalize job titles against a configurable set of ideal titles using a token-based matching strategy.
+
+## Features
+- **Configuration**: Externalized in `application.yml` (titles list & similarity threshold)  
+- **Dependency Injection**: Fully uses Spring's IoC for services and components  
+- **Validation**: Method-level and request parameter validation with global exception handling  
+- **Observability**: Spring Boot Actuator endpoints, Micrometer metrics, structured SLF4J logging  
+- **REST API**: `GET /api/normalize?title=...` returns JSON `{ "normalizedTitle": "..." }`  
+- **API Documentation**: Interactive Swagger UI for exploring and testing  
+- **Tests**: Comprehensive unit, parameterized, edge-case, and integration tests  
+
+## Getting Started
+
+### Prerequisites
+- Java 17+  
+- Maven 3.8+  
+
+## 📦 Build & Run Locally
+
+1. Update titles & threshold in `application.yml` if needed.  
+2. Run the application directly with Maven:
+   ```bash
+   mvn spring-boot:run
+   ```
+3. Open Swagger UI at `http://localhost:8080/swagger-ui.html`.
 
 ## 🚀 Live Swagger UI
 
 Browse and “Try it out” here:  
 https://job-title-normalizer-1083685539637.europe-west1.run.app/swagger-ui/index.html
+
+## ☁️ CI/CD & Deployment
+
+- **cloudbuild.yaml**: automates build, Docker push, and deploy to Cloud Run.  
+- **Cloud Run service:** `job-title-normalizer` in `europe-west1`.  
+- **Environment variables** in Cloud Run:
+  - `APP_API_BASE_URL=https://job-title-normalizer-1083685539637.europe-west1.run.app`
+
+---
 
 ## 🔧 Project Structure
 
@@ -84,23 +118,5 @@ management:
 ```
 
 > **Tip:** To extend or refine matching, you can **add or remove** entries in the `normalizer.titles` list and **tune** the `normalizer.threshold` value in this file before starting the app.
-
-## 📦 Build & Run Locally
-
-1. Update titles & threshold in `application.yml` if needed.  
-2. Run the application directly with Maven:
-   ```bash
-   mvn spring-boot:run
-   ```
-3. Open Swagger UI at `http://localhost:8080/swagger-ui.html`.
-
-## ☁️ CI/CD & Deployment
-
-- **cloudbuild.yaml**: automates build, Docker push, and deploy to Cloud Run.  
-- **Cloud Run service:** `job-title-normalizer` in `europe-west1`.  
-- **Environment variables** in Cloud Run:
-  - `APP_API_BASE_URL=https://job-title-normalizer-1083685539637.europe-west1.run.app`
-
----
 
 _Thanks for using the Job Title Normalizer!_
