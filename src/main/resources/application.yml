@@ -1,0 +1,14 @@
+normalizer:
+  titles:
+    - Architect
+    - Software engineer
+    - Quantity surveyor
+    - Accountant
+    - Builder
+  threshold: 0.5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
