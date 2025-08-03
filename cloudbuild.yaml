@@ -1,5 +1,5 @@
 steps:
-  # 1) Build the JAR
+  # 1) Build your Spring Boot jar
   - name: 'gcr.io/cloud-builders/mvn'
     args:
       - 'clean'
@@ -14,7 +14,13 @@ steps:
       - 'gcr.io/$PROJECT_ID/job-title-normalizer:$SHORT_SHA'
       - '.'
 
-  # 3) Deploy to Cloud Run
+  # 3) Push that image up to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/job-title-normalizer:$SHORT_SHA'
+
+  # 4) Deploy to Cloud Run (now the image is already there)
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
@@ -28,13 +34,9 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
 
-# Tell Cloud Build to push this image into Artifact Registry / Container Registry
-images:
-  - 'gcr.io/$PROJECT_ID/job-title-normalizer:$SHORT_SHA'
-
-# Use Cloud Logging only (necessary if you’re using a custom service account)
+# Remove the `images:` section (we’re pushing explicitly)
+# Use Cloud Logging only (needed if you use a custom service account)
 options:
   logging: CLOUD_LOGGING_ONLY
 
-# Increase timeout if your build is heavy
 timeout: '1200s'
