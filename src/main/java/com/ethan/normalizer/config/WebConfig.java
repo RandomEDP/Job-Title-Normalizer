@@ -12,6 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*")
-                .maxAge(3600);                  // cache preflight response for 1 hour
+                .maxAge(3600);
+                registry.addMapping("/api/normalize")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "OPTIONS");// cache preflight response for 1 hour
     }
 }

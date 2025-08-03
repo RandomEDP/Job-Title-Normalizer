@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.constraints.NotBlank;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/normalize")
 @Validated
 public class NormalisationController {
     private final NormalisationService normaliser;
