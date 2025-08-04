@@ -7,6 +7,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.constraints.NotBlank;
 
+
+/**
+ * REST controller exposing the /api/normalize endpoint.
+ * <p>
+ * Validates input and delegates to JobTitleNormaliserService.
+ * Returns 400 on missing/blank title.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/normalize")
 @Validated
@@ -25,6 +33,7 @@ public class NormalisationController {
     public NormalisationResponse normalize(
             @Parameter(description = "Raw job title to normalize", required = true)
             @RequestParam("title")
+            // If the user submits a blank title, this constraint triggers a 400 Bad Request
             @NotBlank(message = "title must not be blank")
             String title
     ) {

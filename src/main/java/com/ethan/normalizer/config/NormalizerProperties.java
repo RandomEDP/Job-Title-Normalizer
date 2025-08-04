@@ -3,7 +3,11 @@ package com.ethan.normalizer.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import java.util.List;
-
+/**
+ * Binds properties under 'normalizer' in application.yml:
+ * - titles: the list of allowed normalized titles
+ * - threshold: minimum score required to consider a match valid
+ */
 @Component
 @ConfigurationProperties(prefix = "normalizer")
 public class NormalizerProperties {

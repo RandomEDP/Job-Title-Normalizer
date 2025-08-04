@@ -10,7 +10,9 @@ import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+/**
+ * Exercises edge cases around whitespace, punctuation, and Unicode in the matcher.
+ */
 @WebMvcTest(NormalisationController.class)
 class NormalisationControllerTest {
     @Autowired
@@ -18,14 +20,14 @@ class NormalisationControllerTest {
     @MockBean
     NormalisationService service;
     @Test
-    void valid() throws Exception {
+    void controlTest() throws Exception {
         when(service.normalise("Java engineer")).thenReturn("Software engineer");
         mvc.perform(get("/api/normalize").param("title","Java engineer"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.normalizedTitle", is("Software engineer")));
     }
     @Test
-    void blank() throws Exception {
+    void blankReturnsBadRequest() throws Exception {
         mvc.perform(get("/api/normalize").param("title",""))
            .andExpect(status().isBadRequest());
     }
