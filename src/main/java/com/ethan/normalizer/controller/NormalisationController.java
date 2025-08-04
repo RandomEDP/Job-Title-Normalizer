@@ -33,6 +33,7 @@ public class NormalisationController {
     public NormalisationResponse normalize(
             @Parameter(description = "Raw job title to normalize", required = true)
             @RequestParam("title")
+            // If the user submits a blank title, this constraint triggers a 400 Bad Request
             @NotBlank(message = "title must not be blank")
             String title
     ) {
